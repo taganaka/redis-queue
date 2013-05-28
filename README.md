@@ -32,7 +32,7 @@ queue << "a" # << is an alias of push
 # By default, calling pop methid is a blocking operation
 # Your code will wait here for a new  
 while message=@queue.pop
-  #Remove message from the queue if the message has been processed without errors
+  #Remove message from the backup queue if the message has been processed without errors
   queue.commit if YourTask.new(message).perform.succeed?
 end
 
