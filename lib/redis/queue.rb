@@ -45,6 +45,20 @@ class Redis
       @redis.lrem(@process_queue_name, 0, @last_message)
     end
 
+    def process(non_block=false)
+      while message=pop(non_block)
+        ret = yield message if block_given?
+        commit if ret
+      end
+    end
+
+    def refill
+      while message=@redis.lpop(@process_queue_name)
+        @redis.rpush(@queue_name, message)
+      end
+      true
+    end
+
     alias :size  :length
     alias :dec   :pop
     alias :shift :pop
