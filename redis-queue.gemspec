@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency "redis", "~> 3.0.4"
   s.add_dependency "hiredis", "~> 0.4.5"
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "~> 2.13.0"
   # s.add_runtime_dependency "rest-client"
 end
