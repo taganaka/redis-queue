@@ -6,10 +6,14 @@ Gem::Specification.new do |s|
   s.name        = "redis-queue"
   s.version     = Redis::Queue::VERSION
   s.authors     = ["Francesco Laurita"]
-  s.email       = ["taganaka@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.email       = ["francesco.laurita@gmail.com"]
+  s.homepage    = "https://github.com/taganaka/redis-queue"
+  s.summary     = %q{A distributed queue based on Redis}
+  s.description = %q{
+    Adds Redis::Queue class which can be used as Distributed-Queue based on Redis.
+    Redis is often used as a messaging server to implement processing of background jobs or other kinds of messaging tasks.
+    It implements Reliable-queue pattern decribed here: http://redis.io/commands/rpoplpush
+  }
 
   s.rubyforge_project = "redis-queue"
 
@@ -20,7 +24,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "redis", "~> 3.0.4"
   s.add_dependency "hiredis", "~> 0.4.5"
-  # specify any dependencies here; for example:
+
   s.add_development_dependency "rspec", "~> 2.13.0"
-  # s.add_runtime_dependency "rest-client"
 end
