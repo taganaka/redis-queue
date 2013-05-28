@@ -14,7 +14,8 @@ It implements Reliable-queue pattern decribed here: http://redis.io/commands/rpo
     $ rake
 
 == Simple usage
-``` ruby
+
+```ruby
 require "redis-queue"
 redis = Redis.new
 queue = Redis::Queue.new('q_test','bp_q_test',  :redis => redis)
