@@ -1,6 +1,6 @@
 class Redis
   class Queue
-    
+
     VERSION = "0.0.1"
 
     def self.version
@@ -8,8 +8,8 @@ class Redis
     end
 
     def initialize(queue_name, process_queue_name, options = {})
-      raise ArgumentError, 'First argument must be a non emmpty string'  if !queue_name.is_a?(String) || queue_name.empty?
-      raise ArgumentError, 'Second argument must be a non emmpty string' if !process_queue_name.is_a?(String) || process_queue_name.empty?
+      raise ArgumentError, 'First argument must be a non empty string'  if !queue_name.is_a?(String) || queue_name.empty?
+      raise ArgumentError, 'Second argument must be a non empty string' if !process_queue_name.is_a?(String) || process_queue_name.empty?
       raise ArgumentError, 'Queue and Process queue have the same name'  if process_queue_name == queue_name 
 
       @redis = options[:redis] || Redis.current
