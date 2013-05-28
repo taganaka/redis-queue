@@ -29,7 +29,7 @@ queue << "a" # << is an alias of push
 
 # Process messages
 
-# By default, calling pop methid is a blocking operation
+# By default, calling pop method is a blocking operation
 # Your code will wait here for a new  
 while message=@queue.pop
   #Remove message from the backup queue if the message has been processed without errors
