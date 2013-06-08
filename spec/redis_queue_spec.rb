@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "timeout"
 
 describe Redis::Queue do
   before(:all) do
@@ -81,6 +82,22 @@ describe Redis::Queue do
     @queue.refill
     @redis.lrange('__test',0, -1).should be == ['a', 'a']
     @redis.llen('bp__test').should be == 0
+  end
+
+  it 'should work with the timeout parameters' do
+    @queue.clear(true)
+    100.times { @queue << rand(100) }
+    is_ok = true
+    begin
+      Timeout::timeout(3) {
+        @queue.process(false, 2) {|m| true}
+      }
+    rescue Timeout::Error => e
+      is_ok = false
+    end
+    
+    is_ok.should be_true
+    
   end
 
 end
