@@ -97,7 +97,25 @@ describe Redis::Queue do
     end
     
     is_ok.should be_true
-    
+
+  end
+
+  it 'should honor the timeout param in the initializer' do
+    redis = Redis.new
+    queue = Redis::Queue.new('__test_tm', 'bp__test_tm', :redis => redis, :timeout => 2)
+    queue.clear true
+
+    is_ok = true
+    begin
+      Timeout::timeout(4) {
+        queue.pop
+      }
+    rescue Timeout::Error => e
+      puts "#{e}"
+      is_ok = false
+    end
+    queue.clear
+    is_ok.should be_true
   end
 
 end
