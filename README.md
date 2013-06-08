@@ -43,6 +43,12 @@ end
   YourTask.new(message).perform.succeed?
 end
 
+# Process messages with timout (starting from version 0.0.3)
+# Wait for 15 seconds for new messages, then exit
+queue.process(false, 15) do |message|
+  puts "'#{message}'" 
+end
+
 ```
 Contributing to redis-queue
 ----------------
