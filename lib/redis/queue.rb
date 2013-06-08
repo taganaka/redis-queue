@@ -16,6 +16,7 @@ class Redis
       @queue_name = queue_name
       @process_queue_name = process_queue_name
       @last_message = nil
+      @timeout = options[:timeout] ||= 0
     end
 
     def length
@@ -39,7 +40,7 @@ class Redis
       if non_block
         @last_message = @redis.rpoplpush(@queue_name,@process_queue_name)
       else
-        @last_message = @redis.brpoplpush(@queue_name,@process_queue_name)
+        @last_message = @redis.brpoplpush(@queue_name,@process_queue_name, @timeout)
       end
       @last_message
     end
@@ -49,10 +50,14 @@ class Redis
     end
 
     def process(non_block=false)
-      while message=pop(non_block)
+
+      loop do
+        message = pop(non_block)
         ret = yield message if block_given?
         commit if ret
+        break if message.nil? || (non_block && empty?)
       end
+
     end
 
     def refill
