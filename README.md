@@ -49,6 +49,11 @@ queue.process(false, 15) do |message|
   puts "'#{message}'" 
 end
 
+# Process messages in a non blocking-way
+# A soon as the queue is empty, the block will exit
+queue.process(true) do |message|
+  puts "'#{message}'" 
+end
 ```
 Contributing to redis-queue
 ----------------
