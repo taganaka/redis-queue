@@ -49,7 +49,7 @@ class Redis
       @redis.lrem(@process_queue_name, 0, @last_message)
     end
 
-    def process(non_block=false)
+    def process(non_block=false, timeout = 0)
 
       loop do
         message = pop(non_block)
