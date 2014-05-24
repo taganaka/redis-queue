@@ -86,7 +86,7 @@ describe Redis::Queue do
 
   it 'should work with the timeout parameters' do
     @queue.clear(true)
-    100.times { @queue << rand(100) }
+    2.times { @queue << rand(100) }
     is_ok = true
     begin
       Timeout::timeout(3) {
@@ -111,7 +111,6 @@ describe Redis::Queue do
         queue.pop
       }
     rescue Timeout::Error => e
-      puts "#{e}"
       is_ok = false
     end
     queue.clear
