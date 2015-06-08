@@ -1,8 +1,6 @@
 class Redis
   class Queue
 
-    VERSION = "0.0.4"
-
     def self.version
       "redis-queue version #{VERSION}"
     end

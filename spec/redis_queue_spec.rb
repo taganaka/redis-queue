@@ -96,7 +96,7 @@ describe Redis::Queue do
       is_ok = false
     end
     
-    is_ok.should be_true
+    is_ok.should be true
 
   end
 
@@ -114,7 +114,7 @@ describe Redis::Queue do
       is_ok = false
     end
     queue.clear
-    is_ok.should be_true
+    is_ok.should be true
   end
 
 end
