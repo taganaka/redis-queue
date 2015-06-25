@@ -8,7 +8,7 @@ class Redis
     def initialize(queue_name, process_queue_name, options = {})
       raise ArgumentError, 'First argument must be a non empty string'  if !queue_name.is_a?(String) || queue_name.empty?
       raise ArgumentError, 'Second argument must be a non empty string' if !process_queue_name.is_a?(String) || process_queue_name.empty?
-      raise ArgumentError, 'Queue and Process queue have the same name'  if process_queue_name == queue_name 
+      raise ArgumentError, 'Queue and Process queue have the same name'  if process_queue_name == queue_name
 
       @redis = options[:redis] || Redis.current
       @queue_name = queue_name
@@ -47,15 +47,17 @@ class Redis
       @redis.lrem(@process_queue_name, 0, @last_message)
     end
 
-    def process(non_block=false, timeout = nil)
+    def process(non_block=false, timeout=nil, count=nil)
       @timeout = timeout unless timeout.nil?
+      yield nil if count && count < 0
       loop do
+        break unless count.nil? || count > 0
         message = pop(non_block)
         ret = yield message if block_given?
         commit if ret
+        count -= 1 unless count.nil?
         break if message.nil? || (non_block && empty?)
       end
-
     end
 
     def refill

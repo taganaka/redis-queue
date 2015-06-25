@@ -5,7 +5,7 @@ describe Redis::Queue do
   before(:all) do
     @redis = Redis.new
     @queue = Redis::Queue.new('__test', 'bp__test')
-    @queue.clear true 
+    @queue.clear true
   end
 
   after(:all) do
@@ -31,7 +31,7 @@ describe Redis::Queue do
     message.should be == "a"
   end
 
-  it 'should remove the element from bp_queue if commit is called' do 
+  it 'should remove the element from bp_queue if commit is called' do
     @redis.llen('bp__test').should be == 1
     @queue.commit
     @redis.llen('bp__test').should be == 0
@@ -95,9 +95,31 @@ describe Redis::Queue do
     rescue Timeout::Error => e
       is_ok = false
     end
-    
-    is_ok.should be true
 
+    is_ok.should be true
+  end
+
+  it 'should work with a maximum count' do
+    @queue.clear(true)
+    @queue << "a"
+    @queue << "b"
+    @queue.process(true, nil, 1){|m|m.should be == "a"; true}
+    @queue.process(true, nil, 1){|m|m.should be == "b"; true}
+    @queue.process(true, nil, 1){|m|m.should be == nil; true}
+  end
+
+  it 'should work with a maximum count with a negative number' do
+    @queue.clear(true)
+    @queue << "a"
+    @queue << "b"
+    @queue.process(true, nil, -1){|m|m.should be == nil}
+    expectations = ["a", "b", nil]
+    iteration = 0
+    @queue.process(true, nil, 4) do |m|
+      iteration.should be < 3
+      m.should be == expectations[iteration]
+      iteration += 1
+    end
   end
 
   it 'should honor the timeout param in the initializer' do
