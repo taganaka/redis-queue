@@ -1,6 +1,7 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "redis-queue/version"
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'redis/queue/version'
 
 Gem::Specification.new do |s|
   s.name        = "redis-queue"

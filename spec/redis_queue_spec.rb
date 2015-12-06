@@ -1,10 +1,11 @@
 require 'spec_helper'
-require "timeout"
+require 'timeout'
+require 'pry'
 
 describe Redis::Queue do
   before(:all) do
     @redis = Redis.new
-    @queue = Redis::Queue.new('__test', 'bp__test')
+    @queue = Redis::Queue.new
     @queue.clear true
   end
 
@@ -17,7 +18,7 @@ describe Redis::Queue do
   end
 
   it 'should create a new redis-queue object' do
-    queue = Redis::Queue.new('__test', 'bp__test')
+    queue = Redis::Queue.new
     queue.class.should == Redis::Queue
   end
 
@@ -32,9 +33,9 @@ describe Redis::Queue do
   end
 
   it 'should remove the element from bp_queue if commit is called' do
-    @redis.llen('bp__test').should be == 1
+    @redis.llen(@queue.processing).should be == 1
     @queue.commit
-    @redis.llen('bp__test').should be == 0
+    @redis.llen(@queue.processing).should be == 0
   end
 
   it 'should implements fifo pattern' do
@@ -53,12 +54,12 @@ describe Redis::Queue do
     @queue.size.should be > 0
     @queue.pop(true)
     @queue.clear
-    @redis.llen('bp__test').should be > 0
+    @redis.llen(@queue.processing).should be > 0
   end
 
   it 'should reset queues content' do
     @queue.clear(true)
-    @redis.llen('bp__test').should be == 0
+    @redis.llen(@queue.processing).should be == 0
   end
 
   it 'should prcess a message' do
@@ -70,7 +71,7 @@ describe Redis::Queue do
     @queue << "a"
     @queue << "a"
     @queue.process(true){|m|m.should be == "a"; false}
-    @redis.lrange('bp__test',0, -1).should be == ['a', 'a']
+    @redis.lrange(@queue.processing,0, -1).should be == ['a', 'a']
   end
 
   it 'should refill a main queue' do
@@ -78,10 +79,10 @@ describe Redis::Queue do
     @queue << "a"
     @queue << "a"
     @queue.process(true){|m|m.should be == "a"; false}
-    @redis.lrange('bp__test',0, -1).should be == ['a', 'a']
+    @redis.lrange(@queue.processing,0, -1).should be == ['a', 'a']
     @queue.refill
-    @redis.lrange('__test',0, -1).should be == ['a', 'a']
-    @redis.llen('bp__test').should be == 0
+    @redis.lrange(@queue.waiting,0, -1).should be == ['a', 'a']
+    @redis.llen(@queue.processing).should be == 0
   end
 
   it 'should work with the timeout parameters' do
@@ -124,7 +125,7 @@ describe Redis::Queue do
 
   it 'should honor the timeout param in the initializer' do
     redis = Redis.new
-    queue = Redis::Queue.new('__test_tm', 'bp__test_tm', :redis => redis, :timeout => 2)
+    queue = Redis::Queue.new(redis: redis, timeout: 2)
     queue.clear true
 
     is_ok = true
@@ -138,5 +139,4 @@ describe Redis::Queue do
     queue.clear
     is_ok.should be true
   end
-
 end
