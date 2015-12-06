@@ -25,18 +25,21 @@ class Redis
     end
 
     def push(obj)
-      redis.lpush(waiting, obj)
+      serialized_object = Marshal.dump(obj)
+      redis.lpush(waiting, serialized_object)
     end
 
-    def pop(non_block=false)
-      @last_message = non_block ? redis.rpoplpush(waiting, processing) : redis.brpoplpush(waiting, processing, timeout)
+    def pop(non_block = false)
+      serialized_object = non_block ? redis.rpoplpush(waiting, processing) : redis.brpoplpush(waiting, processing, timeout)
+      @last_message = serialized_object
+      deserialized_object = Marshal.load(@last_message) unless @last_message.nil?
     end
 
     def commit
       redis.lrem(processing, 0, @last_message)
     end
 
-    def process(non_block=false, timeout=nil, count=nil)
+    def process(non_block = false, timeout = nil, count = nil)
       @timeout = timeout unless timeout.nil?
       yield nil if count && count < 0
       loop do
