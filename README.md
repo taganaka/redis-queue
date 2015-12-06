@@ -21,7 +21,7 @@ Simple usage
 ```ruby
 require "redis-queue"
 redis = Redis.new
-queue = Redis::Queue.new('q_test','bp_q_test',  :redis => redis)
+queue = Redis::Queue.new(redis: redis)
 
 #Adding some elements
 queue.push "b" 
