@@ -1,0 +1,14 @@
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 200
+
+Style/IndentationConsistency:
+  EnforcedStyle: rails
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
