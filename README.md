@@ -31,15 +31,15 @@ queue << "a" # << is an alias of push
 
 # By default, calling pop method is a blocking operation
 # Your code will wait here for a new  
-while message=@queue.pop
+while message=queue.pop
   #Remove message from the backup queue if the message has been processed without errors
   queue.commit if YourTask.new(message).perform.succeed?
 end
 
 #Process messages using block
 
-@queue.process do |message|
-  #@queue.commit is called if last statement of the block returns true
+queue.process do |message|
+  #queue.commit is called if last statement of the block returns true
   YourTask.new(message).perform.succeed?
 end
 
