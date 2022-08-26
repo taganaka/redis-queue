@@ -12,8 +12,9 @@ class Redis
       raise ArgumentError, 'First argument must be a non empty string'  if !queue_name.is_a?(String) || queue_name.empty?
       raise ArgumentError, 'Second argument must be a non empty string' if !process_queue_name.is_a?(String) || process_queue_name.empty?
       raise ArgumentError, 'Queue and Process queue have the same name' if process_queue_name == queue_name
+      raise ArgumentError, 'Redis is required' if options[:redis].nil?
 
-      @redis = options[:redis] || Redis.current
+      @redis = options[:redis]
       @queue_name = queue_name
       @process_queue_name = process_queue_name
       @last_message = nil

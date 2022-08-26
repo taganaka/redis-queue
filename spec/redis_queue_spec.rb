@@ -19,7 +19,7 @@ describe Redis::Queue do
   end
 
   it 'should create a new redis-queue object' do
-    queue = Redis::Queue.new('__test', 'bp__test')
+    queue = Redis::Queue.new('__test', 'bp__test', redis: @redis)
     queue.class.should == Redis::Queue
   end
 
