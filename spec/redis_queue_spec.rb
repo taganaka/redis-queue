@@ -6,7 +6,7 @@ require 'timeout'
 describe Redis::Queue do
   before(:all) do
     @redis = Redis.new
-    @queue = Redis::Queue.new('__test', 'bp__test')
+    @queue = Redis::Queue.new('__test', 'bp__test', redis: @redis)
     @queue.clear true
   end
 
